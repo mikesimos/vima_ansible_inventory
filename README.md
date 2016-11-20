@@ -29,3 +29,5 @@ $ ansible all -i vima_inventory.py -m ping
 ``
 python -m unittest discover
 ``
+# Requirements
+* Python >=2.6
