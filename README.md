@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mikeSimos/vima_ansible_inventory.svg?branch=master)](https://travis-ci.org/mikeSimos/vima_ansible_inventory)
+
 # Description
 Vima Ansible Inventory is dynamic inventory script for listing GRNET VPS
 service (vima.grnet.gr) virtual machines. It can be easily configured via
