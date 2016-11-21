@@ -18,14 +18,13 @@
 # version 0.1 Michael-Angelos Simos
 
 import unittest
-import types
 
 
 class VimaAnsibleTestCase(unittest.TestCase):
 
     def test_mechanize(self):
         import robobrowser
-        self.assertTrue(isinstance(getattr(robobrowser, 'RoboBrowser'), types.ClassType))
+        self.assertTrue(getattr(robobrowser, 'RoboBrowser'))
 
     def test_hook(self):
         import inventory_hooks
