@@ -24,12 +24,8 @@ import types
 class VimaAnsibleTestCase(unittest.TestCase):
 
     def test_mechanize(self):
-        import mechanize
-        self.assertTrue(isinstance(getattr(mechanize, 'Browser'), types.ClassType))
-
-    def test_cookielib(self):
-        import cookielib
-        self.assertTrue(isinstance(getattr(cookielib, 'LWPCookieJar'), types.ClassType))
+        import robobrowser
+        self.assertTrue(isinstance(getattr(robobrowser, 'RoboBrowser'), types.ClassType))
 
     def test_hook(self):
         import inventory_hooks

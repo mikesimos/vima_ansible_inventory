@@ -21,11 +21,10 @@ from json import load, dump, loads, dumps
 from time import time
 from sys import exit
 from argparse import ArgumentParser
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 import os
 import sys
-import mechanize
-import cookielib
+from robobrowser import RoboBrowser
 import errno
 from inventory_hooks import grouping
 
@@ -34,21 +33,12 @@ class GRnetVima:
 
     def __init__(self, v_url, v_user, v_password):
         try:
-            br = mechanize.Browser()
-            cookiejar = cookielib.LWPCookieJar()
-            br.set_cookiejar(cookiejar)
-            br.set_handle_equiv(True)
-            br.set_handle_redirect(True)
-            br.set_handle_referer(True)
-            br.set_handle_robots(False)
-            br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
-            br.addheaders = [('User-agent',
-                              'Ansible Dynamic Inventory Vima Harvester')]
+            br = RoboBrowser(parser="html.parser")
             br.open("{}{}".format(v_url.rstrip('/'), "/user/login"))
-            br.select_form(nr=1)
-            br['username'] = v_user
-            br['password'] = v_password
-            br.submit()
+            form = br.get_forms()[1]
+            form['username'].value = v_user
+            form['password'].value = v_password
+            br.submit_form(form)
 
         except Exception as error:
             print("Could not create browser: {}".format(error))
@@ -58,13 +48,13 @@ class GRnetVima:
 
     def list_inventory(self):
         try:
-            url = self.br.open("{}{}".format(self.v_url.rstrip('/'), "/instances/json/"))
-            ret_page = url.read()
-            data = loads(ret_page)
+            self.br.open("{}{}".format(self.v_url.rstrip('/'), "/instances/json/"))
+            ret_page = self.br.response.content
+            data = loads(ret_page.decode('utf-8'))
             inventory = self.grouped_inventory(data['aaData'], group_func=grouping)
             return inventory
 
-        except Exception, e:
+        except Exception as e:
             print("[Error] : " + str(e))
             exit(1)
 
@@ -131,18 +121,18 @@ def main():
 
     # Parse Config
 
-    config = SafeConfigParser()
+    config = ConfigParser()
     default_ini_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                     'vima_inventory.ini')
     ini_path = os.path.expanduser(os.path.expandvars(os.environ.get('VIMA_INVENTORY_INI_PATH',
                                                                     default_ini_path)))
     config.read(ini_path)
 
-    cache_path = config.get('GENERIC', 'cache_path', '/tmp/ansible-vima-inventory-cache.tmp')
+    cache_path = config.get('GENERIC', 'cache_path', fallback='/tmp/ansible-vima-inventory-cache.tmp')
     cache_ttl = config.getint('GENERIC', 'cache_ttl')
-    ini_host = config.get('GENERIC', 'vima_url', '')
-    ini_user = config.get('GENERIC', 'vima_user', '')
-    ini_pass = config.get('GENERIC', 'vima_pass', '')
+    ini_host = config.get('GENERIC', 'vima_url', fallback='')
+    ini_user = config.get('GENERIC', 'vima_user', fallback='')
+    ini_pass = config.get('GENERIC', 'vima_pass', fallback='')
 
     # Parse Arguments
 
