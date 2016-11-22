@@ -17,3 +17,5 @@ script:
 sudo: false
 matrix:
   fast_finish: true
+after_success:
+  - coveralls
