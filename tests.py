@@ -38,8 +38,8 @@ class VimaAnsibleTestCase(unittest.TestCase):
 
     def test_get_inventory(self):
         import vima_inventory
-        self.assertTrue(hasattr(vima_inventory, 'list_and_cache'))
-        self.assertTrue(callable(getattr(vima_inventory, 'list_and_cache')))
+        self.assertTrue(hasattr(vima_inventory, 'get_inventory'))
+        self.assertTrue(callable(getattr(vima_inventory, 'get_inventory')))
 
 if __name__ == '__main__':
     unittest.main()

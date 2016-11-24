@@ -8,9 +8,8 @@ python:
 
 install:
     - pip install -r requirements.txt
-    - pip install coveralls
 script:
-    - nosetests --with-coverage --cover-package=.
+    - python test.py
 
 # This reportedly works around an issue downloading packages from pypi on
 # travis.  Consider removing this after the underlying issue is fixed.
