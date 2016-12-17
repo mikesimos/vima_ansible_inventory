@@ -12,7 +12,7 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #   GNU General Public License for more details.
 #   You should have received a copy of the GNU General Public License
-#   along with Foobar. If not, see <http://www.gnu.org/licenses/>.
+#   along with vima_ansible_inventory. If not, see <http://www.gnu.org/licenses/>.
 #
 # Authors:
 # version 0.1 Michael-Angelos Simos
@@ -21,12 +21,23 @@ from json import load, dump, loads, dumps
 from time import time
 from sys import exit
 from argparse import ArgumentParser
-from configparser import ConfigParser
 import os
 import sys
 from robobrowser import RoboBrowser
 import errno
 from inventory_hooks import grouping
+try:
+    from json import dumps, dump, load
+except ImportError:
+    from simplejson import dumps, dump, load
+from argparse import ArgumentParser
+try:
+    # python 2
+    from ConfigParser import SafeConfigParser as ConfigParser
+except ImportError:
+    # python 3
+    from configparser import ConfigParser
+
 
 
 class GRnetVima:
